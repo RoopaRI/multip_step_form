@@ -1,12 +1,10 @@
-
 import './App.css';
+import FormBody from "./FormBody/FormBody";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        React
-      </header>
+      <FormBody/>
     </div>
   );
 }
