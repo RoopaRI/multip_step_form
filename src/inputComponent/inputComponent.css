@@ -2,9 +2,10 @@
     display: flex;
     align-items: center;
     width:100%;
+    margin: 20%;
 }
 
 .input{
     position: absolute;
-    left:25%;
+    left:30%;
 }

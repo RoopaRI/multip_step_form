@@ -1,4 +1,4 @@
 .App{
-  background-image: linear-gradient(to right, pink, indigo);
+  background-image: linear-gradient(to right, rgb(192, 130, 236), pink);
   height: 100vh;
 }

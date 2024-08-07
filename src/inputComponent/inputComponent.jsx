@@ -23,7 +23,8 @@ export default function InputComponent({ type }) {
         <div className="formField">
             <FormControl className="input">
             <InputLabel htmlFor={type}>{type.toUpperCase()}</InputLabel>
-            <Input 
+            <Input
+                
                 type={type} 
                 id={type} 
                 value={formData[type]}
