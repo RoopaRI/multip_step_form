@@ -1,3 +1,10 @@
-h1{
-    text-align: center;
+.formField{
+    display: flex;
+    align-items: center;
+    width:100%;
+}
+
+.input{
+    position: absolute;
+    left:25%;
 }

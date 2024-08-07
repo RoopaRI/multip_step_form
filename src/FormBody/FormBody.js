@@ -4,7 +4,10 @@ import "./FormBody.css";
 export default function FormBody(){
     return(
         <div className="formBody">
-            <InputComponent/>
+            <h1>Multi Step Form</h1>
+            <InputComponent type="userName"/>
+            <InputComponent type="email"/>
+            <InputComponent type="phoneNo"/>
         </div>
     )
 }
