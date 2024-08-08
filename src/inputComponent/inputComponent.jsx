@@ -5,11 +5,11 @@ import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 
 export default function InputComponent({ type }) {
-    console.log(type)
     const [formData, setFormData] = useState({
         userName: "",
         email: "",
         phoneNo: "",
+        address: "",
     });
 
     const handleChange = (e) => {
@@ -22,16 +22,15 @@ export default function InputComponent({ type }) {
     return (
         <div className="formField">
             <FormControl className="input">
-            <InputLabel htmlFor={type}>{type.toUpperCase()}</InputLabel>
-            <Input
-                
-                type={type} 
-                id={type} 
-                value={formData[type]}
-                onChange={handleChange}
-                required
-            />
+                <InputLabel htmlFor={type}>{type.toUpperCase()}</InputLabel>
+                <Input
+                    type={type}
+                    id={type}
+                    value={formData[type]}
+                    onChange={handleChange}
+                    required
+                />
             </FormControl>
-        </div> 
+        </div>
     );
 }
