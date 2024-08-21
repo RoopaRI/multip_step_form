@@ -51,11 +51,33 @@ export default function HorizontalNonLinearStepper() {
                 hasErrors = true;
             }
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-                newErrors.email = "Email must be in the format 'xyz@gmail.com'.";
+                newErrors.email = "Email must be in the format 'something@something.com'.";
                 hasErrors = true;
             }
             if (!/^\d{10}$/.test(formData.phoneNo)) {
                 newErrors.phoneNo = "Phone number must be a 10-digit number.";
+                hasErrors = true;
+            }
+        } else if (activeStep === 1) {
+            // Validate step 1 fields
+            if (formData.address1.trim() === "") {
+                newErrors.address1 = "Address Line 1 cannot be empty.";
+                hasErrors = true;
+            }
+            if (formData.address2.trim() === "") {
+                newErrors.address2 = "Address Line 2 cannot be empty.";
+                hasErrors = true;
+            }
+            if (formData.city.trim() === "") {
+                newErrors.city = "City cannot be empty.";
+                hasErrors = true;
+            }
+            if (formData.state.trim() === "") {
+                newErrors.state = "State cannot be empty.";
+                hasErrors = true;
+            }
+            if (!/^\d{6}$/.test(formData.zipCode)) {
+                newErrors.zipCode = "Zip code must be 6 digits.";
                 hasErrors = true;
             }
         }
@@ -73,6 +95,7 @@ export default function HorizontalNonLinearStepper() {
                 : activeStep + 1;
         setActiveStep(newActiveStep);
     };
+    
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -126,6 +149,31 @@ export default function HorizontalNonLinearStepper() {
                 }
                 break;
     
+            case 'address1':
+            case 'address2':
+                if (value.trim() === "") {
+                    error = "This field cannot be empty.";
+                }
+                break;
+    
+            case 'city':
+                if (value.trim() === "") {
+                    error = "City cannot be empty.";
+                }
+                break;
+    
+            case 'state':
+                if (value.trim() === "") {
+                    error = "State cannot be empty.";
+                }
+                break;
+    
+            case 'zipCode':
+                if (!/^\d{6}$/.test(value)) {
+                    error = "Zip code must be 6 digits.";
+                }
+                break;
+    
             default:
                 break;
         }
@@ -140,6 +188,7 @@ export default function HorizontalNonLinearStepper() {
             [type]: error
         });
     };
+    
     
 
     return (
