@@ -1,7 +1,8 @@
+import React from "react";
 import InputComponent from "../inputComponent/inputComponent";
 import "./FormBody.css";
 
-export default function FormBody({ step, formData, onChange }) {
+export default function FormBody({ step, formData, onChange, errors }) {
     const stepClass = step === 0 ? 'step0' : 'step1';
 
     return (
@@ -10,33 +11,34 @@ export default function FormBody({ step, formData, onChange }) {
             {step === 0 && (
                 <>
                     <div className="formField">
-                        <InputComponent type="userName" value={formData.userName} onChange={onChange} />
+                        <InputComponent 
+                            type="userName" 
+                            value={formData.userName} 
+                            onChange={onChange}
+                            error={errors.userName}  // Pass error messages
+                        />
                     </div>
                     <div className="formField">
-                        <InputComponent type="email" value={formData.email} onChange={onChange} />
+                        <InputComponent 
+                            type="email" 
+                            value={formData.email} 
+                            onChange={onChange}
+                            error={errors.email}  // Pass error messages
+                        />
                     </div>
                     <div className="formField">
-                        <InputComponent type="phoneNo" value={formData.phoneNo} onChange={onChange} />
+                        <InputComponent 
+                            type="phoneNo" 
+                            value={formData.phoneNo} 
+                            onChange={onChange}
+                            error={errors.phoneNo}  // Pass error messages
+                        />
                     </div>
                 </>
             )}
             {step === 1 && (
                 <>
-                    <div className="formField">
-                        <InputComponent type="address1" value={formData.address1} onChange={onChange} />
-                    </div>
-                    <div className="formField">
-                        <InputComponent type="address2" value={formData.address2} onChange={onChange} />
-                    </div>
-                    <div className="formField">
-                        <InputComponent type="city" value={formData.city} onChange={onChange} />
-                    </div>
-                    <div className="formField">
-                        <InputComponent type="state" value={formData.state} onChange={onChange} />
-                    </div>
-                    <div className="formField">
-                        <InputComponent type="zipCode" value={formData.zipCode} onChange={onChange} />
-                    </div>
+                    {/* Address-related fields */}
                 </>
             )}
         </div>

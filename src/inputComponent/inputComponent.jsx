@@ -3,8 +3,9 @@ import "./inputComponent.css";
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
+import FormHelperText from '@mui/material/FormHelperText'; // For displaying errors
 
-export default function InputComponent({ type, value, onChange }) {
+export default function InputComponent({ type, value, onChange, error }) {
     const handleChange = (e) => {
         onChange(type, e.target.value);
     };
@@ -34,7 +35,7 @@ export default function InputComponent({ type, value, onChange }) {
 
     return (
         <div className="formField">
-            <FormControl className="input">
+            <FormControl className="input" error={!!error}>
                 <InputLabel htmlFor={type}>{getLabel(type)}</InputLabel>
                 <Input
                     type={type === 'email' ? 'email' : 'text'}
@@ -43,6 +44,7 @@ export default function InputComponent({ type, value, onChange }) {
                     onChange={handleChange}
                     required
                 />
+                {error && <FormHelperText>{error}</FormHelperText>}
             </FormControl>
         </div>
     );

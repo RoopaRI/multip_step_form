@@ -2,6 +2,7 @@
 .formBody {
     max-width: 600px; /* Maximum width for larger screens */
     width: 90%; /* Full width with a max constraint */
+    
     background-color: white;
     position: absolute;
     top: 50%;
@@ -15,6 +16,7 @@
 
 h1 {
     text-align: center;
+    background-color: #eeeeee;
     margin-bottom: 20px; /* Space below the heading */
 }
 

@@ -28,12 +28,45 @@ export default function HorizontalNonLinearStepper() {
         zipCode: ""
     });
 
+    const [errors, setErrors] = useState({
+        userName: "",
+        email: "",
+        phoneNo: ""
+    });
+    
+
     const totalSteps = () => steps.length;
     const completedSteps = () => Object.keys(completed).length;
     const isLastStep = () => activeStep === totalSteps() - 1;
     const allStepsCompleted = () => completedSteps() === totalSteps();
 
     const handleNext = () => {
+        let hasErrors = false;
+        const newErrors = { ...errors };
+    
+        if (activeStep === 0) {
+            // Validate step 0 fields
+            if (!/^[A-Za-z\s]+$/.test(formData.userName)) {
+                newErrors.userName = "Username must contain only letters and spaces.";
+                hasErrors = true;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                newErrors.email = "Email must be in the format 'xyz@gmail.com'.";
+                hasErrors = true;
+            }
+            if (!/^\d{10}$/.test(formData.phoneNo)) {
+                newErrors.phoneNo = "Phone number must be a 10-digit number.";
+                hasErrors = true;
+            }
+        }
+    
+        setErrors(newErrors);
+    
+        if (hasErrors) {
+            // If there are errors, do not proceed
+            return;
+        }
+    
         const newActiveStep =
             isLastStep() && !allStepsCompleted()
                 ? steps.findIndex((step, i) => !(i in completed))
@@ -72,23 +105,59 @@ export default function HorizontalNonLinearStepper() {
     };
 
     const handleChange = (type, value) => {
+        let error = "";
+    
+        switch (type) {
+            case 'userName':
+                if (!/^[A-Za-z\s]+$/.test(value)) {
+                    error = "Username must contain only letters and spaces.";
+                }
+                break;
+    
+            case 'email':
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    error = "Email must be in the format 'something@something.com'.";
+                }
+                break;
+    
+            case 'phoneNo':
+                if (!/^\d{10}$/.test(value)) {
+                    error = "Phone number must be a 10-digit number.";
+                }
+                break;
+    
+            default:
+                break;
+        }
+    
         setFormData({
             ...formData,
             [type]: value,
         });
+    
+        setErrors({
+            ...errors,
+            [type]: error
+        });
     };
+    
 
     return (
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Stepper nonLinear activeStep={activeStep} sx={{ padding: '0 20px', height: '60px', fontSize: '0.875rem' }}>
-                {steps.map((label, index) => (
-                    <Step key={label} completed={completed[index]} sx={{ flex: 1 }}>
-                        <StepButton color="inherit" onClick={handleStep(index)} sx={{ fontSize: '0.75rem', height: '40px' }}>
-                            {label}
-                        </StepButton>
-                    </Step>
-                ))}
-            </Stepper>
+            {/* Stepper */}
+            <Box sx={{ padding: '0 20px', height: '60px', fontSize: '0.875rem' }}>
+                <Stepper nonLinear activeStep={activeStep} sx={{ height: '100%' }}>
+                    {steps.map((label, index) => (
+                        <Step key={label} completed={completed[index]} sx={{ flex: 1 }}>
+                            <StepButton color="inherit" onClick={handleStep(index)} sx={{ fontSize: '0.75rem', height: '100%' }}>
+                                {label}
+                            </StepButton>
+                        </Step>
+                    ))}
+                </Stepper>
+            </Box>
+
+            {/* Form Body */}
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
                 {allStepsCompleted() ? (
                     <React.Fragment>
@@ -101,14 +170,17 @@ export default function HorizontalNonLinearStepper() {
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <Box sx={{ flex: 1 }}>
+                        <Box sx={{ flex: 1, marginBottom: '20px', overflowY: 'auto' }}>
                             <FormBody
                                 step={activeStep}
                                 formData={formData}
                                 onChange={handleChange}
+                                errors={errors}
                             />
                         </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mt: 2, padding: '0 20px' }}>
+
+                        {/* Navigation Buttons */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '0 20px' }}>
                             <Button
                                 color="inherit"
                                 onClick={handleBack}
