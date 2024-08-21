@@ -1,32 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import "./inputComponent.css";
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 
-export default function InputComponent({ type }) {
-    const [formData, setFormData] = useState({
-        userName: "",
-        email: "",
-        phoneNo: "",
-        address: "",
-    });
-
+export default function InputComponent({ type, value, onChange }) {
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [type]: e.target.value,
-        });
+        onChange(type, e.target.value);
+    };
+
+    const getLabel = (type) => {
+        switch (type) {
+            case 'userName':
+                return 'Username';
+            case 'email':
+                return 'Email';
+            case 'phoneNo':
+                return 'Phone Number';
+            case 'address1':
+                return 'Address Line 1';
+            case 'address2':
+                return 'Address Line 2';
+            case 'city':
+                return 'City';
+            case 'state':
+                return 'State';
+            case 'zipCode':
+                return 'Zip Code';
+            default:
+                return '';
+        }
     };
 
     return (
         <div className="formField">
             <FormControl className="input">
-                <InputLabel htmlFor={type}>{type.toUpperCase()}</InputLabel>
+                <InputLabel htmlFor={type}>{getLabel(type)}</InputLabel>
                 <Input
-                    type={type}
+                    type={type === 'email' ? 'email' : 'text'}
                     id={type}
-                    value={formData[type]}
+                    value={value}
                     onChange={handleChange}
                     required
                 />

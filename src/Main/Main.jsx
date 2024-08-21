@@ -17,22 +17,17 @@ const steps = [
 export default function HorizontalNonLinearStepper() {
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState({});
+    const [formData, setFormData] = useState({
+        userName: "",
+        email: "",
+        phoneNo: "",
+        address: "",
+    });
 
-    const totalSteps = () => {
-        return steps.length;
-    };
-
-    const completedSteps = () => {
-        return Object.keys(completed).length;
-    };
-
-    const isLastStep = () => {
-        return activeStep === totalSteps() - 1;
-    };
-
-    const allStepsCompleted = () => {
-        return completedSteps() === totalSteps();
-    };
+    const totalSteps = () => steps.length;
+    const completedSteps = () => Object.keys(completed).length;
+    const isLastStep = () => activeStep === totalSteps() - 1;
+    const allStepsCompleted = () => completedSteps() === totalSteps();
 
     const handleNext = () => {
         const newActiveStep =
@@ -60,6 +55,23 @@ export default function HorizontalNonLinearStepper() {
     const handleReset = () => {
         setActiveStep(0);
         setCompleted({});
+        setFormData({
+            userName: "",
+            email: "",
+            phoneNo: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            zipCode: ""
+        });
+    };
+
+    const handleChange = (type, value) => {
+        setFormData({
+            ...formData,
+            [type]: value,
+        });
     };
 
     return (
@@ -87,7 +99,11 @@ export default function HorizontalNonLinearStepper() {
                 ) : (
                     <React.Fragment>
                         <Box sx={{ mt: 2, mb: 1, py: 1 }}>
-                            <FormBody step={activeStep} />
+                            <FormBody
+                                step={activeStep}
+                                formData={formData}
+                                onChange={handleChange}
+                            />
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'row', mt: 'auto', pt: 60 }}>
                             <Button
