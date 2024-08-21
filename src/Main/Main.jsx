@@ -21,7 +21,11 @@ export default function HorizontalNonLinearStepper() {
         userName: "",
         email: "",
         phoneNo: "",
-        address: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        zipCode: ""
     });
 
     const totalSteps = () => steps.length;
@@ -76,60 +80,53 @@ export default function HorizontalNonLinearStepper() {
 
     return (
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Stepper nonLinear activeStep={activeStep}>
+            <Stepper nonLinear activeStep={activeStep} sx={{ padding: '0 20px', height: '60px', fontSize: '0.875rem' }}>
                 {steps.map((label, index) => (
-                    <Step key={label} completed={completed[index]}>
-                        <StepButton color="inherit" onClick={handleStep(index)}>
+                    <Step key={label} completed={completed[index]} sx={{ flex: 1 }}>
+                        <StepButton color="inherit" onClick={handleStep(index)} sx={{ fontSize: '0.75rem', height: '40px' }}>
                             {label}
                         </StepButton>
                     </Step>
                 ))}
             </Stepper>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
                 {allStepsCompleted() ? (
                     <React.Fragment>
                         <Typography sx={{ mt: 2, mb: 1 }}>
                             All steps completed - you're finished
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                            <Box sx={{ flex: '1 1 auto' }} />
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 2 }}>
                             <Button onClick={handleReset}>Reset</Button>
                         </Box>
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <Box sx={{ mt: 2, mb: 1, py: 1 }}>
+                        <Box sx={{ flex: 1 }}>
                             <FormBody
                                 step={activeStep}
                                 formData={formData}
                                 onChange={handleChange}
                             />
                         </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', mt: 'auto', pt: 60 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mt: 2, padding: '0 20px' }}>
                             <Button
                                 color="inherit"
-                                disabled={activeStep === 0}
                                 onClick={handleBack}
+                                disabled={activeStep === 0}  // Disable Back button on step 0
                                 sx={{ mr: 1 }}
                             >
                                 Back
                             </Button>
-                            <Box sx={{ flex: '1 1 auto' }} />
-                            <Button onClick={handleNext} sx={{ mr: 1 }}>
-                                Next
-                            </Button>
-                            {activeStep !== steps.length &&
-                                (completed[activeStep] ? (
-                                    <Typography variant="caption" sx={{ display: 'inline-block' }}>
-                                        Step {activeStep + 1} already completed
-                                    </Typography>
-                                ) : (
-                                    <Button onClick={handleComplete}>
-                                        {completedSteps() === totalSteps() - 1
-                                            ? 'Finish'
-                                            : 'Complete Step'}
-                                    </Button>
-                                ))}
+                            {activeStep < steps.length - 1 && (
+                                <Button onClick={handleNext} sx={{ mr: 1 }}>
+                                    Next
+                                </Button>
+                            )}
+                            {activeStep === steps.length - 1 && (
+                                <Button onClick={handleComplete} sx={{ mr: 1 }}>
+                                    Finish
+                                </Button>
+                            )}
                         </Box>
                     </React.Fragment>
                 )}
