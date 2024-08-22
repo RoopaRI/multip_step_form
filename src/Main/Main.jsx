@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Main.css";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
@@ -27,13 +27,43 @@ export default function HorizontalNonLinearStepper() {
         state: "",
         zipCode: ""
     });
-
     const [errors, setErrors] = useState({
         userName: "",
         email: "",
-        phoneNo: ""
+        phoneNo: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        zipCode: ""
     });
-    
+    const [submissionSuccess, setSubmissionSuccess] = useState(false);
+
+    useEffect(() => {
+        const savedData = JSON.parse(localStorage.getItem('formData'));
+        if (savedData) {
+            setActiveStep(savedData.activeStep || 0);
+            setCompleted(savedData.completed || {});
+            setFormData(savedData.formData || {
+                userName: "",
+                email: "",
+                phoneNo: "",
+                address1: "",
+                address2: "",
+                city: "",
+                state: "",
+                zipCode: ""
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('formData', JSON.stringify({
+            activeStep,
+            completed,
+            formData
+        }));
+    }, [activeStep, completed, formData]);
 
     const totalSteps = () => steps.length;
     const completedSteps = () => Object.keys(completed).length;
@@ -43,9 +73,8 @@ export default function HorizontalNonLinearStepper() {
     const handleNext = () => {
         let hasErrors = false;
         const newErrors = { ...errors };
-    
+
         if (activeStep === 0) {
-            // Validate step 0 fields
             if (!/^[A-Za-z\s]+$/.test(formData.userName)) {
                 newErrors.userName = "Username must contain only letters and spaces.";
                 hasErrors = true;
@@ -59,7 +88,6 @@ export default function HorizontalNonLinearStepper() {
                 hasErrors = true;
             }
         } else if (activeStep === 1) {
-            // Validate step 1 fields
             if (formData.address1.trim() === "") {
                 newErrors.address1 = "Address Line 1 cannot be empty.";
                 hasErrors = true;
@@ -81,21 +109,23 @@ export default function HorizontalNonLinearStepper() {
                 hasErrors = true;
             }
         }
-    
+
         setErrors(newErrors);
-    
+
         if (hasErrors) {
-            // If there are errors, do not proceed
             return;
         }
-    
+
+        // Mark current step as completed
+        const newCompleted = { ...completed, [activeStep]: true };
+        setCompleted(newCompleted);
+
         const newActiveStep =
             isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
+                ? steps.findIndex((step, i) => !(i in newCompleted))
                 : activeStep + 1;
         setActiveStep(newActiveStep);
     };
-    
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -106,10 +136,16 @@ export default function HorizontalNonLinearStepper() {
     };
 
     const handleComplete = () => {
-        const newCompleted = { ...completed };
-        newCompleted[activeStep] = true;
+        // Mark the final step as completed
+        const newCompleted = { ...completed, [totalSteps() - 1]: true };
         setCompleted(newCompleted);
-        handleNext();
+
+        setSubmissionSuccess(true);
+        localStorage.removeItem('formData');
+        setTimeout(() => {
+            setSubmissionSuccess(false);
+            handleReset();
+        }, 30000);
     };
 
     const handleReset = () => {
@@ -125,76 +161,75 @@ export default function HorizontalNonLinearStepper() {
             state: "",
             zipCode: ""
         });
+        localStorage.removeItem('formData');
     };
 
     const handleChange = (type, value) => {
         let error = "";
-    
+
         switch (type) {
             case 'userName':
                 if (!/^[A-Za-z\s]+$/.test(value)) {
                     error = "Username must contain only letters and spaces.";
                 }
                 break;
-    
+
             case 'email':
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     error = "Email must be in the format 'something@something.com'.";
                 }
                 break;
-    
+
             case 'phoneNo':
                 if (!/^\d{10}$/.test(value)) {
                     error = "Phone number must be a 10-digit number.";
                 }
                 break;
-    
+
             case 'address1':
             case 'address2':
                 if (value.trim() === "") {
                     error = "This field cannot be empty.";
                 }
                 break;
-    
+
             case 'city':
                 if (value.trim() === "") {
                     error = "City cannot be empty.";
                 }
                 break;
-    
+
             case 'state':
                 if (value.trim() === "") {
                     error = "State cannot be empty.";
                 }
                 break;
-    
+
             case 'zipCode':
                 if (!/^\d{6}$/.test(value)) {
                     error = "Zip code must be 6 digits.";
                 }
                 break;
-    
+
             default:
                 break;
         }
-    
+
         setFormData({
             ...formData,
             [type]: value,
         });
-    
+
         setErrors({
             ...errors,
             [type]: error
         });
     };
-    
-    
 
     return (
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             {/* Stepper */}
-            <Box sx={{ padding: '0 20px', height: '60px', fontSize: '0.875rem' }}>
+            <Box sx={{ padding: '0 120px', height: '60px', fontSize: '0.875rem' }}>
                 <Stepper nonLinear activeStep={activeStep} sx={{ height: '100%' }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]} sx={{ flex: 1 }}>
@@ -208,7 +243,11 @@ export default function HorizontalNonLinearStepper() {
 
             {/* Form Body */}
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
-                {allStepsCompleted() ? (
+                {submissionSuccess ? (
+                    <Typography variant="h6" color="darkgreen" display="flex" justifyContent="center">
+                        Form submission successful!
+                    </Typography>
+                ) : allStepsCompleted() ? (
                     <React.Fragment>
                         <Typography sx={{ mt: 2, mb: 1 }}>
                             All steps completed - you're finished
@@ -229,11 +268,11 @@ export default function HorizontalNonLinearStepper() {
                         </Box>
 
                         {/* Navigation Buttons */}
-                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '0 20px' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '0 120px' }}>
                             <Button
                                 color="inherit"
                                 onClick={handleBack}
-                                disabled={activeStep === 0}  // Disable Back button on step 0
+                                disabled={activeStep === 0}
                                 sx={{ mr: 1 }}
                             >
                                 Back
