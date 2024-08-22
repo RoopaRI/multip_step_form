@@ -1,7 +1,9 @@
 .App{
-  background-image: linear-gradient(to right, rgb(229, 229, 173), rgb(241, 181, 68));
-  /* background-color: #bbbbbb; */
-  /* height: 90vh; */
-  margin: 5px;
+  /* background-image: linear-gradient(to right, rgb(229, 229, 173), rgb(241, 181, 68)); */
+  background-color: #aaaaaa;
+  max-width: 100%;
+  padding: 20px;
+  /* margin: 0 auto; */
   border-radius: 10px;
+  box-sizing: border-box;
 }

@@ -229,11 +229,11 @@ export default function HorizontalNonLinearStepper() {
     return (
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             {/* Stepper */}
-            <Box sx={{ padding: '0 120px', height: '60px', fontSize: '0.875rem' }}>
+            <Box sx={{ padding: '0 120px', fontSize: '0.875rem', height: '30px' }}>
                 <Stepper nonLinear activeStep={activeStep} sx={{ height: '100%' }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]} sx={{ flex: 1 }}>
-                            <StepButton color="inherit" onClick={handleStep(index)} sx={{ fontSize: '0.75rem', height: '100%' }}>
+                            <StepButton color="inherit" onClick={handleStep(index)} sx={{ fontSize: '0.75rem' }}>
                                 {label}
                             </StepButton>
                         </Step>
@@ -268,22 +268,22 @@ export default function HorizontalNonLinearStepper() {
                         </Box>
 
                         {/* Navigation Buttons */}
-                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '0 120px' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '30px 120px' }}>
                             <Button
                                 color="inherit"
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
-                                sx={{ mr: 1 }}
+                                sx={{ mr: 1, backgroundColor: 'white' }}
                             >
                                 Back
                             </Button>
                             {activeStep < steps.length - 1 && (
-                                <Button onClick={handleNext} sx={{ mr: 1 }}>
+                                <Button onClick={handleNext} sx={{ mr: 1, backgroundColor: 'white'}}>
                                     Next
                                 </Button>
                             )}
                             {activeStep === steps.length - 1 && (
-                                <Button onClick={handleComplete} sx={{ mr: 1 }}>
+                                <Button onClick={handleComplete} sx={{ mr: 1, backgroundColor: 'white' }}>
                                     Finish
                                 </Button>
                             )}
